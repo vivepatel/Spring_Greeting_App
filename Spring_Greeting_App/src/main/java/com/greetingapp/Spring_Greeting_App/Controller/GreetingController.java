@@ -1,12 +1,9 @@
 package com.greetingapp.Spring_Greeting_App.Controller;
 
-import com.greetingapp.Spring_Greeting_App.Controller.Greeting;
 import com.greetingapp.Spring_Greeting_App.Controller.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/greeting")
@@ -27,13 +24,14 @@ public class GreetingController {
         return greetingService.getGreeting(firstName, lastName);
     }
 
-    // New endpoint to update a greeting
-    @PutMapping("/{id}")
-    public ResponseEntity<Greeting> updateGreeting(
-            @PathVariable Long id,
-            @RequestParam String newMessage) {
-        Optional<Greeting> updatedGreeting = greetingService.updateGreeting(id, newMessage);
-        return updatedGreeting.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    // New endpoint to delete a greeting by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteGreeting(@PathVariable Long id) {
+        boolean isDeleted = greetingService.deleteGreeting(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("Greeting with ID " + id + " deleted successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

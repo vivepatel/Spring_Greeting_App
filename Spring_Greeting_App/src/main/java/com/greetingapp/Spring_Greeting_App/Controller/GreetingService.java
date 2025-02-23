@@ -33,15 +33,12 @@ public class GreetingService {
         return message;
     }
 
-    // New method to update a greeting
-    public Optional<Greeting> updateGreeting(Long id, String newMessage) {
-        Optional<Greeting> existingGreeting = greetingRepository.findById(id);
-        if (existingGreeting.isPresent()) {
-            Greeting greeting = existingGreeting.get();
-            greeting.setMessage(newMessage); // Update the message
-            greetingRepository.save(greeting); // Save the updated greeting
-            return Optional.of(greeting);
+    // New method to delete a greeting by ID
+    public boolean deleteGreeting(Long id) {
+        if (greetingRepository.existsById(id)) {
+            greetingRepository.deleteById(id);
+            return true; // Return true if the greeting was deleted
         }
-        return Optional.empty(); // Return empty if the greeting is not found
+        return false; // Return false if the greeting was not found
     }
 }
