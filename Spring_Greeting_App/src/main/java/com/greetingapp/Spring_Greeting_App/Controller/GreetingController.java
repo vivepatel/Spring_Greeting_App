@@ -3,9 +3,10 @@ package com.greetingapp.Spring_Greeting_App.Controller;
 import com.greetingapp.Spring_Greeting_App.Controller.Greeting;
 import com.greetingapp.Spring_Greeting_App.Controller.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/greeting")
@@ -26,9 +27,13 @@ public class GreetingController {
         return greetingService.getGreeting(firstName, lastName);
     }
 
-    // New endpoint to list all greetings
-    @GetMapping("/all")
-    public List<Greeting> getAllGreetings() {
-        return greetingService.getAllGreetings();
+    // New endpoint to update a greeting
+    @PutMapping("/{id}")
+    public ResponseEntity<Greeting> updateGreeting(
+            @PathVariable Long id,
+            @RequestParam String newMessage) {
+        Optional<Greeting> updatedGreeting = greetingService.updateGreeting(id, newMessage);
+        return updatedGreeting.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
