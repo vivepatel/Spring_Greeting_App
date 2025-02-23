@@ -1,10 +1,12 @@
 package com.greetingapp.Spring_Greeting_App.Controller;
+
+import com.greetingapp.Spring_Greeting_App.Controller.Greeting;
 import com.greetingapp.Spring_Greeting_App.Controller.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/greeting")
@@ -17,15 +19,19 @@ public class GreetingController {
         this.greetingService = greetingService;
     }
 
+    // Existing endpoint to create a greeting
     @GetMapping
-    public Map<String, String> getGreeting(
+    public String getGreeting(
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName) {
+        return greetingService.getGreeting(firstName, lastName);
+    }
 
-        String greetingMessage = greetingService.getGreeting(firstName, lastName);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("message", greetingMessage);
-        return response;
+    // New endpoint to find a greeting by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Greeting> getGreetingById(@PathVariable Long id) {
+        Optional<Greeting> greeting = greetingService.getGreetingById(id);
+        return greeting.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

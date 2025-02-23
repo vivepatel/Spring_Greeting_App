@@ -5,12 +5,15 @@ import com.greetingapp.Spring_Greeting_App.Controller.GreetingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class GreetingService {
 
     @Autowired
     private GreetingRepository greetingRepository;
 
+    // Existing method to create a greeting
     public String getGreeting(String firstName, String lastName) {
         String message;
         if (firstName != null && lastName != null) {
@@ -28,5 +31,10 @@ public class GreetingService {
         greetingRepository.save(greeting);
 
         return message;
+    }
+
+    // New method to find a greeting by ID
+    public Optional<Greeting> getGreetingById(Long id) {
+        return greetingRepository.findById(id);
     }
 }
